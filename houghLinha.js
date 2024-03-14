@@ -1,4 +1,5 @@
 const thetaMax = 180;
+let rhoMax = 0;
 let tabelaCos = new Array(thetaMax);
 let tabelaSen = new Array(thetaMax);
 let theta = 0;
@@ -9,7 +10,7 @@ for (let i = 0; i < thetaMax; i++) {
 }
 
 export function criarAcumulador(w, h) {
-    let rhoMax = 2 * Math.sqrt(w * w + h * h);
+    rhoMax = Math.round(2 * Math.sqrt(w * w + h * h));
     return Array.from({ length: rhoMax}, () =>
         Array.from({ length: thetaMax }, () => 0)
     );
@@ -25,7 +26,6 @@ export function votacao(acumulador, ctx, w, h) {
                 for (let theta = 0; theta < thetaMax; theta++) {
                     let rho = Math.round(x * tabelaCos[theta] + y * tabelaSen[theta] + Math.sqrt(w * w + h * h));
                     acumulador[rho][theta] ++;
-                    
                 }
             }
         }
@@ -35,8 +35,6 @@ export function votacao(acumulador, ctx, w, h) {
 
 export function encontrarPicosNMS(acumulador, limiar, tamanhoVizinhanca) {
     let picos = [];
-    const thetaMax = acumulador[0].length;
-    const rhoMax = acumulador.length;
     for (let i = 0; i < rhoMax; i++) {
         for (let j = 0; j < thetaMax; j++) {
             if (acumulador[i][j] < limiar) {
@@ -63,7 +61,7 @@ export function encontrarPicosNMS(acumulador, limiar, tamanhoVizinhanca) {
             }
 
             if (isMax) {
-                picos.push({ theta: j * (Math.PI / 180), rho: i });
+                picos.push({ theta: j, rho: i });
             }
         }
     }

@@ -6,33 +6,54 @@
   <title>Transformada de Hough</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
 </head>
 
 <body>
   <nav class="container-fluid">
-    
-      <li><strong>Transformada de Hough</strong></li>
-    
-   
+
+    <li><strong>Transformada de Hough</strong></li>
+
+
   </nav>
   <main class="container">
     <div class="grid">
       <section>
+
         <div>
+
+          <fieldset>
+            <input type="radio" id="deteccao-linhas" name="tipo-deteccao" checked />
+            <label htmlFor="tipo-deteccao">Detectar Linhas</label>
+
+            <input type="radio" id="deteccao-circulos" name="tipo-deteccao" />
+            <label htmlFor="deteccao-circulos">Detectar Círculos (Pode demorar)</label>
+          </fieldset>
+
           <label id="label-lp">
             Limiar da Votação
           </label>
-          <input type="range" value="80" min="0" max="300" id="input-lp" disabled/>
-          
+          <input type="range" value="100" min="0" max="300" id="input-lp" disabled />
+
           <label id="label-lv">
             Limiar de vizinhos do NMS
           </label>
-          <input type="range" value="20" min="0" max="100" id="input-lv" disabled />
+          <input type="range" value="50" min="0" max="100" id="input-lv" disabled />
 
-        
+          <div style="display: flex; justify-content: space-between; gap: 10px;" id="div-raios" hidden>
+            <label for="raioMinimo">Raio Min</label>
+            <input type="number" name="raioMinimo" id="raioMinimo" value="20">
+            <label for="raioMaximo">Raio Max</label>
+            <input type="number" name="raioMaximo" id="raioMaximo" value="40">
+          </div>
+          <p id="msg">Carregue sua imagem</p>
+
+          <div style="display: flex; justify-content: space-between; gap: 50px;">
+            <input type="file" id="input-imagem" style="box-shadow: 1px 4px 16px rgba(0, 0, 0, 0.1);" />
+            <button id="btn-processar">Processar</button>
+          </div>
+
         </div>
-        <p id="msg">Carregue sua imagem</p>
-        <input type="file" id="input-imagem" />
         <div class="canvas-container" style="margin-top: 20px;">
           <canvas id="imagem-canvas" style="margin-right: 10px;"></canvas>
           <canvas id="parametros-canvas"></canvas>
@@ -40,7 +61,7 @@
       </section>
     </div>
   </main>
-  
+
   <script type="module" src="script.js"></script>
 </body>
 
