@@ -1,13 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Transformada de Hough Simples</title>
+  <meta charset="UTF-8">
+  <title>Transformada de Hough</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
+
 <body>
-    <input type="file" id="input-imagem"/>
-    <canvas id="imagem-canvas"></canvas>
-    <canvas id="parametros-canvas"></canvas>
-    <script type="module" src="script.js"></script>
+  <nav class="container-fluid">
+    
+      <li><strong>Transformada de Hough</strong></li>
+    
+   
+  </nav>
+  <main class="container">
+    <div class="grid">
+      <section>
+        <div>
+          <label id="label-lp">
+            Limiar da Votação
+          </label>
+          <input type="range" value="80" min="0" max="300" id="input-lp" disabled/>
+          
+          <label id="label-lv">
+            Limiar de vizinhos do NMS
+          </label>
+          <input type="range" value="20" min="0" max="100" id="input-lv" disabled />
+
+        
+        </div>
+        <p id="msg">Carregue sua imagem</p>
+        <input type="file" id="input-imagem" />
+        <div class="canvas-container" style="margin-top: 20px;">
+          <canvas id="imagem-canvas" style="margin-right: 10px;"></canvas>
+          <canvas id="parametros-canvas"></canvas>
+        </div>
+      </section>
+    </div>
+  </main>
+  
+  <script type="module" src="script.js"></script>
 </body>
+
 </html>

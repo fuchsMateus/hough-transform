@@ -4,7 +4,8 @@ export function desenharLinhas(ctx, picos, w, h) {
     ctx.lineWidth = 2;
 
     picos.forEach(linha => {
-        const { theta, rho } = linha;
+        let { theta, rho } = linha;
+        rho -= Math.sqrt(w * w + h * h);
         let x0 = 0;
         let y0 = (rho - x0 * Math.cos(theta)) / Math.sin(theta);
         let x1 = w;
@@ -24,26 +25,27 @@ export function desenharLinhas(ctx, picos, w, h) {
     ctx.stroke();
 }
 
-export function desenharEspacoHough(acumulador, canvasId) {
+export function desenharEspacoHough(acumulador, canvasId, w, h) {
     let valorMaximo = Math.max(...acumulador.flat());
 
     let canvas = document.getElementById(canvasId);
     let ctx = canvas.getContext('2d');
-    let altura = acumulador.length;
-    let largura = acumulador[0].length;
+    let h2 = acumulador.length;
+    let w2 = acumulador[0].length;
 
-    canvas.width = largura;
-    canvas.height = altura;
+    canvas.width = w;
+    canvas.height = h;
 
-    for (let i = 0; i < altura; i++) {
-        for (let j = 0; j < largura; j++) {
-            let valor = acumulador[i][j];
+    for (let rho = 0; rho < h2; rho++) { 
+        for (let theta = 0; theta < w2; theta++) { 
+            let valor = acumulador[rho][theta]; 
 
             let intensidade = Math.round((valor / valorMaximo) * 255);
             ctx.fillStyle = `rgb(${intensidade}, ${intensidade}, ${intensidade})`;
-            ctx.fillRect(j, i, 1, 1);
+            ctx.beginPath();
+            ctx.fillRect(theta, rho/(h2/h), 1, 1);
+            ctx.closePath();
+            
         }
     }
 }
-
-

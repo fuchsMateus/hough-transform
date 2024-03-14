@@ -13,7 +13,7 @@ export function escalaCinza(ctx, w, h) {
 
 export function filtroDeSobel(ctx, w ,h) {
     const imageData = ctx.getImageData(0, 0, w, h);
-    let sobelData = new Uint8ClampedArray(w * h * 4);
+    let sobelData = new Uint8ClampedArray(w * h *4 );
     let mascaraX = [
         [-1, 0, 1],
         [-2, 0, 2],
@@ -45,6 +45,5 @@ export function filtroDeSobel(ctx, w ,h) {
             sobelData[px + 3] = 255; //Alpha
         }
     }
-
     ctx.putImageData(new ImageData(sobelData, w, h), 0, 0);
 }
