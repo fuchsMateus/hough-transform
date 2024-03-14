@@ -10,10 +10,7 @@ export function criarAcumuladorC(w, h, rMinp, rMaxp) {
     else { rMin = parseInt(rMinp); }
 
     if (rMaxp == '') {
-        rMax = Math.round(h / 2);
-        if (w < h) {
-            rMax = Math.round(w / 2);
-        }
+        rMax = 1;
     }
     else { rMax= parseInt(rMaxp);}
   

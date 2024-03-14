@@ -33,18 +33,18 @@
           <label id="label-lp">
             Limiar da Votação
           </label>
-          <input type="range" value="100" min="0" max="300" id="input-lp" disabled />
+          <input type="range" value="100" min="0" max="300" id="input-lp" />
 
           <label id="label-lv">
             Limiar de vizinhos do NMS
           </label>
-          <input type="range" value="50" min="0" max="100" id="input-lv" disabled />
+          <input type="range" value="50" min="0" max="100" id="input-lv"/>
 
           <div style="display: flex; justify-content: space-between; gap: 10px;" id="div-raios" hidden>
             <label for="raioMinimo">Raio Min</label>
-            <input type="number" name="raioMinimo" id="raioMinimo" value="20">
+            <input type="number" name="raioMinimo" id="raioMinimo" value="10" min="0">
             <label for="raioMaximo">Raio Max</label>
-            <input type="number" name="raioMaximo" id="raioMaximo" value="40">
+            <input type="number" name="raioMaximo" id="raioMaximo" value="50" min="1" disabled>
           </div>
           <p id="msg">Carregue sua imagem</p>
 

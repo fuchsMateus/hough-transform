@@ -7,44 +7,58 @@ import { criarAcumuladorC, votacaoC, encontrarPicosNMSC } from './houghCirculo.j
 // Seleção dos elementos do DOM
 const inputLp = document.getElementById('input-lp');
 const inputLv = document.getElementById('input-lv');
+
 const inputRl = document.getElementById('deteccao-linhas');
-inputRl.checked = true;
 const inputRc = document.getElementById('deteccao-circulos');
+
 const inputRaioMinimo = document.getElementById('raioMinimo');
 const inputRaioMaximo = document.getElementById('raioMaximo');
+
 const divRaios = document.getElementById('div-raios');
 
-// Variáveis de controle
+const btnProcessar = document.getElementById('btn-processar');
+
 const maxTamanhoImagem = 400;
-let imgOriginal;
+let img;
 let canvas = document.getElementById('imagem-canvas');
 let ctx = canvas.getContext('2d');
 
-// Funções
-function debounce(func, wait) {
-  let timeout;
-  return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), wait);
-  };
-}
-
-function rListener() {
+function radioListener() {
   const encontrarCirculo = inputRc.checked;
   divRaios.hidden = !encontrarCirculo;
-  if (imgOriginal) {
-    processar(imgOriginal, canvas, ctx, canvas.width, canvas.height);
-  }
 }
 
-function processar(img, canvas, ctx, w, h) {
+function rangeListener() {
+  document.getElementById('label-lp').innerText = `Limiar da Votação = ${inputLp.value}`;
+  document.getElementById('label-lv').innerText = `Limiar de vizinhos do NMS =  ${inputLv.value}`;
+}
+
+function raioListener() {
+  let max = parseInt(inputRaioMaximo.value, 10);
+  let min = parseInt(inputRaioMinimo.value, 10);
+  const faixa = 40;
+  if (inputRaioMinimo.value == '') inputRaioMaximo.value = '';
+  else if (min < 0) {
+    inputRaioMaximo.value = '';
+    inputRaioMinimo.value = '';
+  }
+  else inputRaioMaximo.value = min + faixa;
+
+}
+
+rangeListener();
+radioListener();
+
+inputLp.addEventListener('input', rangeListener);
+inputLv.addEventListener('input', rangeListener);
+inputRl.addEventListener('change', radioListener);
+inputRc.addEventListener('change', radioListener);
+inputRaioMinimo.addEventListener('input', raioListener);
+
+async function processar(img, ctx, w, h) {
+  ctx.drawImage(img, 0, 0, w, h);
   const limiarPicos = inputLp.value;
   const vizinhosPico = inputLv.value;
-  document.getElementById('label-lp').innerText = `Limiar da Votação = ${limiarPicos}`;
-  document.getElementById('label-lv').innerText = `Limiar de vizinhos do NMS = ${vizinhosPico}`;
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(img, 0, 0, w, h);
 
   escalaCinza(ctx, w, h);
   filtroDeSobel(ctx, w, h);
@@ -69,10 +83,10 @@ document.getElementById('input-imagem').addEventListener('change', function (e) 
   let reader = new FileReader();
 
   reader.onload = function (event) {
-    imgOriginal = new Image();
-    imgOriginal.onload = function () {
-      let razao = imgOriginal.height / imgOriginal.width;
-      if (imgOriginal.height > maxTamanhoImagem || imgOriginal.width > maxTamanhoImagem) {
+    img = new Image();
+    img.onload = function () {
+      let razao = img.height / img.width;
+      if (img.height > maxTamanhoImagem || img.width > maxTamanhoImagem) {
         if (razao > 1) {
           canvas.height = maxTamanhoImagem;
           canvas.width = maxTamanhoImagem / razao;
@@ -81,27 +95,26 @@ document.getElementById('input-imagem').addEventListener('change', function (e) 
           canvas.height = maxTamanhoImagem * razao;
         }
       } else {
-        canvas.width = imgOriginal.width;
-        canvas.height = imgOriginal.height;
+        canvas.width = img.width;
+        canvas.height = img.height;
       }
-
-      inputLp.removeAttribute('disabled');
-      inputLv.removeAttribute('disabled');
       document.getElementById('msg').hidden = true;
 
-      const processarDebounced = debounce(() => processar(imgOriginal, canvas, ctx, canvas.width, canvas.height), 1000);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-      inputLp.addEventListener('input', processarDebounced);
-      inputLv.addEventListener('input', processarDebounced);
-      inputRaioMinimo.addEventListener('input', processarDebounced);
-      inputRaioMaximo.addEventListener('input', processarDebounced);
+      btnProcessar.onclick = () => {
+        btnProcessar.setAttribute('aria-busy', 'true');
+        setTimeout(() => {
+          processar(img, ctx, canvas.width, canvas.height)
+            .finally(() => {
+              btnProcessar.removeAttribute('aria-busy');
+            });
+        }, 10);
+      };
 
-      processar(imgOriginal, canvas, ctx, canvas.width, canvas.height);
     };
-    imgOriginal.src = event.target.result;
+    img.src = event.target.result;
   };
   reader.readAsDataURL(e.target.files[0]);
 });
-
-inputRl.addEventListener('change', rListener);
-inputRc.addEventListener('change', rListener);
