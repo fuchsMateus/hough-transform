@@ -9,7 +9,7 @@
 
 </head>
 
-<body>
+<body style="background-color: whitesmoke;"> 
   <nav class="container-fluid">
 
     <li><strong>Transformada de Hough</strong></li>
@@ -27,7 +27,7 @@
             <label htmlFor="tipo-deteccao">Detectar Linhas</label>
 
             <input type="radio" id="deteccao-circulos" name="tipo-deteccao" />
-            <label htmlFor="deteccao-circulos">Detectar Círculos (Pode demorar)</label>
+            <label htmlFor="deteccao-circulos">Detectar Círculos (Pode causar lentidão)</label>
           </fieldset>
 
           <label id="label-lp">
@@ -44,7 +44,7 @@
             <label for="raioMinimo">Raio Min</label>
             <input type="number" name="raioMinimo" id="raioMinimo" value="10" min="0">
             <label for="raioMaximo">Raio Max</label>
-            <input type="number" name="raioMaximo" id="raioMaximo" value="50" min="1" disabled>
+            <input type="number" name="raioMaximo" id="raioMaximo" value="40" min="1" disabled>
           </div>
           <p id="msg">Carregue sua imagem</p>
 
@@ -61,6 +61,11 @@
       </section>
     </div>
   </main>
+
+  <footer class="container">
+    <p>Mateus Fuchs</p>
+  </footer>
+  
 
   <script type="module" src="script.js"></script>
 </body>

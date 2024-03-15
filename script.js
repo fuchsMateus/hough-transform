@@ -1,9 +1,8 @@
 // Importações dos módulos necessários
 import { escalaCinza, filtroDeSobel } from './preprocessar.js';
 import { criarAcumulador, votacao, encontrarPicosNMS } from './houghLinha.js';
-import { desenharLinhas, desenharEspacoHough, desenharCirculos } from './desenho.js';
+import { desenharLinhas, desenharEspacoHough, desenharCirculos, desenharEspacoHough3D } from './desenho.js';
 import { criarAcumuladorC, votacaoC, encontrarPicosNMSC } from './houghCirculo.js';
-
 // Seleção dos elementos do DOM
 const inputLp = document.getElementById('input-lp');
 const inputLv = document.getElementById('input-lv');
@@ -18,10 +17,13 @@ const divRaios = document.getElementById('div-raios');
 
 const btnProcessar = document.getElementById('btn-processar');
 
-const maxTamanhoImagem = 400;
+const maxTamanhoImagem = 500;
 let img;
 let canvas = document.getElementById('imagem-canvas');
+let canvasEH = document.getElementById('parametros-canvas');
 let ctx = canvas.getContext('2d');
+let ctxEH = canvasEH.getContext('2d');
+let pararDeExibir = 0;
 
 function radioListener() {
   const encontrarCirculo = inputRc.checked;
@@ -34,9 +36,8 @@ function rangeListener() {
 }
 
 function raioListener() {
-  let max = parseInt(inputRaioMaximo.value, 10);
   let min = parseInt(inputRaioMinimo.value, 10);
-  const faixa = 40;
+  const faixa = 30;
   if (inputRaioMinimo.value == '') inputRaioMaximo.value = '';
   else if (min < 0) {
     inputRaioMaximo.value = '';
@@ -56,6 +57,8 @@ inputRc.addEventListener('change', radioListener);
 inputRaioMinimo.addEventListener('input', raioListener);
 
 async function processar(img, ctx, w, h) {
+  if(pararDeExibir!=0) pararDeExibir();
+  ctxEH.clearRect(0,0,canvasEH.width, canvasEH.height);
   ctx.drawImage(img, 0, 0, w, h);
   const limiarPicos = inputLp.value;
   const vizinhosPico = inputLv.value;
@@ -64,22 +67,23 @@ async function processar(img, ctx, w, h) {
   filtroDeSobel(ctx, w, h);
 
   if (inputRl.checked) {
-    const acumulador = votacao(criarAcumulador(w, h), ctx, w, h);
+    const [ acumulador,  valorMaximo] = votacao(criarAcumulador(w, h), ctx, w, h);
     const picos = encontrarPicosNMS(acumulador, limiarPicos, vizinhosPico);
     desenharLinhas(ctx, picos, w, h);
-    desenharEspacoHough(acumulador, 'parametros-canvas', picos, h);
+    desenharEspacoHough(acumulador, 'parametros-canvas', picos, h, valorMaximo);
   } else {
     const rMin = inputRaioMinimo.value;
     const rMax = inputRaioMaximo.value;
-    const acumulador = votacaoC(criarAcumuladorC(w, h, rMin, rMax), ctx, w, h);
-
+    const [ acumulador,  valorMaximo] = votacaoC(criarAcumuladorC(w, h, rMin, rMax), ctx, w, h);
     const picos = encontrarPicosNMSC(acumulador, limiarPicos, vizinhosPico);
-    console.log(picos)
     desenharCirculos(ctx, picos);
+    pararDeExibir = desenharEspacoHough3D('parametros-canvas', acumulador, picos, w, h, valorMaximo)
   }
 }
 
 document.getElementById('input-imagem').addEventListener('change', function (e) {
+  if(pararDeExibir!=0) pararDeExibir();
+
   let reader = new FileReader();
 
   reader.onload = function (event) {
@@ -100,6 +104,7 @@ document.getElementById('input-imagem').addEventListener('change', function (e) 
       }
       document.getElementById('msg').hidden = true;
 
+      ctxEH.clearRect(0,0,canvasEH.width, canvasEH.height);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 

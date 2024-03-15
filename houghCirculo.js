@@ -25,6 +25,7 @@ export function criarAcumuladorC(w, h, rMinp, rMaxp) {
 }
 
 export function votacaoC(acumulador, ctx, w, h) {
+    let valorMaximo = 0;
     const imageData = ctx.getImageData(0, 0, w, h).data;
 
     for (let y = 0; y < h; y++) {
@@ -36,13 +37,15 @@ export function votacaoC(acumulador, ctx, w, h) {
                         let r = Math.round(Math.sqrt((x - a) * (x - a) + (y - b) * (y - b)));
                         if (r <= rMax && r >= rMin) {
                             acumulador[r-rMin][b][a]++;
+                            let atual = acumulador[r-rMin][b][a];
+                            if(atual > valorMaximo) valorMaximo = atual;
                         }
                     }
                 }
             }
         }
     }
-    return acumulador;
+    return [acumulador,valorMaximo];
 }
 
 export function encontrarPicosNMSC(acumulador, limiar, tamanhoVizinhanca) {
