@@ -23,7 +23,7 @@ export function votacao(acumulador, ctx, w, h) {
     for (let y = 0; y < h; y++) {
         for (let x = 0; x < w; x++) {
             const pixelIndex = (y * w + x) * 4;
-            if (imageData[pixelIndex] >= 224) {
+            if (imageData[pixelIndex] == 255) {
                 for (let theta = 0; theta < thetaMax; theta++) {
                     let rho = Math.round(x * tabelaCos[theta] + y * tabelaSen[theta] + Math.sqrt(w * w + h * h));
                     acumulador[rho][theta] ++;
@@ -71,6 +71,3 @@ export function encontrarPicosNMS(acumulador, limiar, tamanhoVizinhanca) {
 
     return picos;
 }
-
-
-

@@ -81,7 +81,7 @@ export function desenharEspacoHough3D(canvasId, acumulador, picos, w, h, valorMa
     canvas.width = w;
 
     let imagensR = [];
-    let timer; // Para controlar o setTimeout
+    let timer;
 
     for (let r = 0; r < acumulador.length; r++) {
         ctx.fillStyle = 'rgb(0,0,0)';
@@ -118,16 +118,15 @@ export function desenharEspacoHough3D(canvasId, acumulador, picos, w, h, valorMa
 
     function passarImagem() {
         if (indiceAtual >= imagensR.length) {
-            indiceAtual = 0; // Volta ao início se tiver atingido o fim da lista de imagens
+            indiceAtual = 0;
         }
 
         img.src = imagensR[indiceAtual++];
-        timer = setTimeout(passarImagem, 41.6667); // Aproximadamente 24 fps
+        timer = setTimeout(passarImagem, 42); //~24 fps
     }
 
-    passarImagem(); // Inicia a animação
+    passarImagem();
 
-    // Retorna uma função de parada
     return function pararAnimacao() {
         clearTimeout(timer);
     };

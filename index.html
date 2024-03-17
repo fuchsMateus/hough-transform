@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8">
@@ -24,19 +24,24 @@
 
           <fieldset>
             <input type="radio" id="deteccao-linhas" name="tipo-deteccao" checked />
-            <label htmlFor="tipo-deteccao">Detectar Linhas</label>
+            <label for="tipo-deteccao">Detectar Linhas</label>
 
             <input type="radio" id="deteccao-circulos" name="tipo-deteccao" />
-            <label htmlFor="deteccao-circulos">Detectar Círculos (Pode causar lentidão)</label>
+            <label for="deteccao-circulos">Detectar Círculos (Pode causar lentidão)</label>
           </fieldset>
 
-          <label id="label-lp">
+          <label id="label-lb" for="input-lb">
+            Limiar da Binarização
+          </label>
+          <input type="range" value="128" min="0" max="255" id="input-lb" />
+
+          <label id="label-lp" for="input-lp">
             Limiar da Votação
           </label>
-          <input type="range" value="100" min="0" max="300" id="input-lp" />
+          <input type="range" value="100" min="1" max="300" id="input-lp" />
 
-          <label id="label-lv">
-            Limiar de vizinhos do NMS
+          <label id="label-lv" for="input-lv">
+            Limiar de Vizinhos do NMS
           </label>
           <input type="range" value="50" min="0" max="100" id="input-lv"/>
 
@@ -44,7 +49,7 @@
             <label for="raioMinimo">Raio Min</label>
             <input type="number" name="raioMinimo" id="raioMinimo" value="10" min="0">
             <label for="raioMaximo">Raio Max</label>
-            <input type="number" name="raioMaximo" id="raioMaximo" value="40" min="1" disabled>
+            <input type="number" name="raioMaximo" id="raioMaximo" value="30" min="1" disabled>
           </div>
           <p id="msg">Carregue sua imagem</p>
 

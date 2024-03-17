@@ -10,7 +10,7 @@ export function criarAcumuladorC(w, h, rMinp, rMaxp) {
     else { rMin = parseInt(rMinp); }
 
     if (rMaxp == '') {
-        rMax = 1;
+        rMax = 20;
     }
     else { rMax= parseInt(rMaxp);}
   
@@ -31,7 +31,7 @@ export function votacaoC(acumulador, ctx, w, h) {
     for (let y = 0; y < h; y++) {
         for (let x = 0; x < w; x++) {
             const pixelIndex = (y * w + x) * 4;
-            if (imageData[pixelIndex] >= 224) {
+            if (imageData[pixelIndex] >= 255) {
                 for (let b = 0; b < bMax; b++) {
                     for (let a = 0; a < aMax; a++) {
                         let r = Math.round(Math.sqrt((x - a) * (x - a) + (y - b) * (y - b)));
