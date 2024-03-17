@@ -48,33 +48,32 @@ export function afinar(ctx, w, h) {
     const imageData = ctx.getImageData(0, 0, w, h);
     let data = imageData.data;
 
-    let elementos = [
-         [
-            [0, 0, 0],
-            [-1, 1, -1],
-            [1, 1, 1]
-        ],
+    const elementosBase = [
         [
-            [-1, 0, 1],
-            [1, 1, 1],
-            [-1, 0, 1]
+            [0, -1, 1],
+            [0, -1, 1],
+            [0, -1, 1]
         ],
+
         [
-            [1, 1, 1],
-            [-1, 1, -1],
-            [0, 0, 0]
-        ],
-        [
-            [1, 0, -1],
-            [1, 1, 1],
-            [1, 0, -1]
+            [0, 0, -1],
+            [0, -1, 1],
+            [-1, 1, -1]
         ]
-    ];
+    ]
+
+    let elementosERotacoes = [];
+    elementosBase.forEach(el => {
+        let r1 = rotacionarMatrizQuadrada(el);
+        let r2 = rotacionarMatrizQuadrada(r1);
+        let r3 = rotacionarMatrizQuadrada(r2)
+        elementosERotacoes.push(el, r1, r2, r3);
+    });
 
     let dataAnterior = data;
     let convergencia = 0;
     while(convergencia<10) {
-        elementos.forEach(el => {
+        elementosERotacoes.forEach(el => {
             let homData = hitOrMiss(ctx, w, h, el);
             data = subtracaoImgBinaria(data, homData);
             if(dadosIguais(data,dataAnterior)) convergencia+=1;
@@ -110,3 +109,15 @@ function dadosIguais(data1,data2){
     return true;
 }
 
+function rotacionarMatrizQuadrada(matriz){
+    let novaMatriz =[];
+    let d = matriz.length;
+    for (let i = 0; i < d; i++) {
+        novaMatriz.push([]);
+        for (let j = d-1; j >= 0; j--) {
+            novaMatriz[i].push(matriz[j][d-(1+i)])
+        }
+    }
+    novaMatriz.reverse();
+   return novaMatriz;
+}
