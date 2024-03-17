@@ -2,6 +2,7 @@ import { escalaCinza, binarizarImagem, suavizacaoGaussiana, filtroDeSobel } from
 import { criarAcumulador, votacao, encontrarPicosNMS } from './houghLinha.js';
 import { desenharLinhas, desenharEspacoHough, desenharCirculos, desenharEspacoHough3D } from './desenho.js';
 import { criarAcumuladorC, votacaoC, encontrarPicosNMSC } from './houghCirculo.js';
+import { afinar } from './op_morfologica.js';
 
 const inputLb = document.getElementById('input-lb');
 const inputLp = document.getElementById('input-lp');
@@ -9,6 +10,8 @@ const inputLv = document.getElementById('input-lv');
 
 const inputRl = document.getElementById('deteccao-linhas');
 const inputRc = document.getElementById('deteccao-circulos');
+
+const checkAfinamento = document.getElementById('afinamento');
 
 const inputRaioMinimo = document.getElementById('raioMinimo');
 const inputRaioMaximo = document.getElementById('raioMaximo');
@@ -70,7 +73,8 @@ async function processar(img, ctx, w, h) {
   escalaCinza(ctx, w, h);
   suavizacaoGaussiana(ctx,w,h);
   filtroDeSobel(ctx, w, h);
-  binarizarImagem(ctx, w, h, limiarBinarizacao)
+  binarizarImagem(ctx, w, h, limiarBinarizacao);
+  if(checkAfinamento.checked) afinar(ctx, w, h);
 
   if (inputRl.checked) {
     const [ acumulador,  valorMaximo] = votacao(criarAcumulador(w, h), ctx, w, h);
